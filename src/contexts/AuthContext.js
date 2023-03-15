@@ -1,8 +1,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import { auth, db } from "../firebase"
 import {createUserWithEmailAndPassword,signInWithEmailAndPassword, signOut, sendPasswordResetEmail} from "firebase/auth";
-import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
-
+import { doc, setDoc, getDoc, arrayUnion, updateDoc } from "firebase/firestore";
 
 const AuthContext = React.createContext()
 
@@ -52,6 +51,25 @@ export function AuthProvider({ children }) {
     return getDoc(doc(db, col, dat))
   }
 
+  async function addMessage(dat,sender,newMessage){
+
+    const docRef = doc(db,'messages',dat);
+    await updateDoc(docRef,{
+      messages: arrayUnion({
+        msg: newMessage,
+        sender: sender,
+        timestamp: 'dummy time'
+      })
+    }).then(() => {
+      console.log("Message added successfully!");
+    }).catch((error) => {
+      console.error("Error adding message:", error);
+    });
+
+
+    return 
+    
+  }
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
@@ -69,7 +87,8 @@ export function AuthProvider({ children }) {
     resetPassword,
     updateEmail,
     updatePassword,
-    getSnap
+    getSnap,
+    addMessage
   }
 
   return (

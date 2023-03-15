@@ -14,6 +14,7 @@ export default function Home() {
 
     const {currentUser, logout, getSnap} = useAuth()
 	const [messages, setMessages] = useState([])
+	const [docs, setDocs] = useState([])
     const [data, setData] = useState();
     const navigate = useNavigate();
 	
@@ -29,7 +30,7 @@ export default function Home() {
         	setData(docSnap.data());
 			docSnap.data().messages.forEach(async dat =>{
 				// setMessages(prev =>   [ ...prev , getDoc(doc(db,"messages", data)).data() ])
-
+				setDocs(prev => [...prev, dat]);
 				let d = await getSnap("messages", dat);
 				// getDoc(doc(db,"messages", dat))
 
@@ -95,8 +96,8 @@ export default function Home() {
 					key={i}
 					sx={{ '&:hover': {bgcolor: '#f5f5f5'}, borderRadius: '10px', }}
 					onClick={()=> {
-						console.log("clicked ",msg.messages)
-						navigate('/message',{state:{msg: msg,you: data.Name}})
+						console.log("clicked ",messages);
+						navigate('/message',{state:{msg: msg,you: data.Name, doc: docs[i]}})
 					}}
 				 	>
 					 	<div style={{ display: 'flex', alignItems: 'center', gap: '12px'}}> <Avatar sx={{ width: '40px', height: '40px' }} alt={msg.sender === 'vasuuu' ? 'You' : 'Sender'} />

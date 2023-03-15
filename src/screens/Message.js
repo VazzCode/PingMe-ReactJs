@@ -16,15 +16,18 @@ import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import { useLocation } from 'react-router';
 import {useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 
 export default function Message() {
 
 
+  const {addMessage} = useAuth();
   let {state} = useLocation();
 
-  let messages = state.msg.messages;
-  let receiver = state.msg.participants.filter(e => e !== state.you)[0]
+  const doc = state.doc;
+  const messages = state.msg.messages;
+  const receiver = state.msg.participants.filter(e => e !== state.you)[0]
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [data, setData] = useState("")
@@ -40,7 +43,8 @@ export default function Message() {
   };
 
   const sendMsg = ()=>{
-      console.log(receiver, messages[0].sender);
+      console.log(state);
+      addMessage(doc,state.you,data);
   };
 
 
@@ -55,7 +59,7 @@ export default function Message() {
   
   return (
     <div style={{
-      height: 700,
+      height: 600,
       display: 'flex',
       flexDirection: 'column',
       // backgroundColor: 'black'
@@ -85,23 +89,22 @@ export default function Message() {
 
 
 
-      <List sx={{height: 700,mt: 1.5, overflowY: 'scroll','::-webkit-scrollbar': { width: '5px' },
+      <List sx={{height: 500, overflowY: 'scroll','::-webkit-scrollbar': { width: '5px' },
     '::-webkit-scrollbar-thumb': { 
       background: '#ccc', 
       borderRadius: '10px' 
     },
-    display: 'flex',
-    flexDirection: 'column'
-    }}>
+    
+    }}
+    >
       {
         messages.map((msg,i) => {
         
-        return (<ListItem key={i}>
-                  <Card sx={{ maxWidth: '70%', margin: '16px', 
+        return (<ListItem key={i} style={{justifyContent:  msg.sender !== receiver? 'flex-end': 'flex-start'}}>
+                  <Card sx={{ maxWidth: '70%', margin: '10px', 
                     padding: '0px', borderRadius: '12px', 
-                    alignSelf: msg.sender !== receiver ? 'flex-end' : 'flex-start', 
                     backgroundColor: msg.sender !== receiver? '#DCF8C6' : '#FFF' }}>
-                    <CardContent sx={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <CardContent sx={{ display: 'flex', alignItems: 'center', gap: '12px', }}>
                       <Avatar sx={{ width: '40px', height: '40px' }} alt={msg.sender !== receiver ? 'You' : 'Sender'} />
                       <Typography variant="subtitle1">{msg.msg }</Typography>
                     </CardContent>
