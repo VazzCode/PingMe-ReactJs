@@ -54,6 +54,18 @@ export default function Message() {
     
   }, [data])
   
+  // useEffect(() => {
+  //   const unsubscribe = db.collection('messages')
+  //     .orderBy('createdAt')
+  //     .onSnapshot((querySnapshot) => {
+  //       const messages = [];
+  //       querySnapshot.forEach((doc) => {
+  //         messages.push({ id: doc.id, ...doc.data() });
+  //       });
+  //       setMessages(messages);
+  //     });
+  //   return unsubscribe;
+  // }, []);
 
 
   
